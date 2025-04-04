@@ -1,8 +1,8 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Plus, ExternalLink } from 'lucide-react';
+import { Plus, ExternalLink, Search } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
@@ -10,7 +10,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { toast } from 'sonner';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
-import { LunchLocation, Order } from '@/lib/types';
+import { LunchLocation, Order, MenuLocationItem } from '@/lib/types';
 
 // Mock data for demonstration purposes
 // In a real application, this would come from a database
@@ -21,7 +21,13 @@ const mockLocations: LunchLocation[] = [
     menuUrl: 'https://example.com/deli-menu',
     createdBy: 'Jan Janssens',
     createdAt: new Date(),
-    myOrder: 'Gezond broodje met extra kaas'
+    myOrder: 'Gezond broodje met extra kaas',
+    menuItems: [
+      { id: '1', name: 'Kaas & Ham', price: 4.50, description: 'Broodje met kaas en ham' },
+      { id: '2', name: 'Club Sandwich', price: 6.50, description: 'Met kip, spek, sla, tomaat en ei' },
+      { id: '3', name: 'Tonijnsalade', price: 5.50, description: 'Huisgemaakte tonijnsalade' },
+      { id: '4', name: 'Gezond', price: 5.00, description: 'Met kaas, ham, ei, sla en groenten' }
+    ]
   }
 ];
 
@@ -53,9 +59,26 @@ const LunchLocations = () => {
     myOrder: ''
   });
   const [newOrder, setNewOrder] = useState('');
+  const [suggestedItems, setSuggestedItems] = useState<MenuLocationItem[]>([]);
+  const [searchText, setSearchText] = useState('');
+  const [showSuggestions, setShowSuggestions] = useState(false);
   
   // Today's locations (in a real app, this would be filtered by date)
   const todaysLocations = mockLocations;
+  
+  useEffect(() => {
+    if (selectedLocation?.menuItems && searchText.length > 1) {
+      // Filter menu items based on search text
+      const items = selectedLocation.menuItems.filter(item => 
+        item.name.toLowerCase().includes(searchText.toLowerCase())
+      );
+      setSuggestedItems(items);
+      setShowSuggestions(items.length > 0);
+    } else {
+      setSuggestedItems([]);
+      setShowSuggestions(false);
+    }
+  }, [searchText, selectedLocation]);
   
   const handleAddLocation = () => {
     // Validation
@@ -108,6 +131,13 @@ const LunchLocations = () => {
     toast.success('Bestelling geplaatst!');
     setIsOrderDialogOpen(false);
     setNewOrder('');
+    setSearchText('');
+  };
+  
+  const handleSuggestionClick = (item: MenuLocationItem) => {
+    setNewOrder(item.name);
+    setSearchText(item.name);
+    setShowSuggestions(false);
   };
   
   const getOrdersForLocation = (locationId: string) => {
@@ -201,6 +231,8 @@ const LunchLocations = () => {
                         onClick={() => {
                           setSelectedLocation(location);
                           setIsOrderDialogOpen(true);
+                          setSearchText('');
+                          setNewOrder('');
                         }}
                         className="text-euricom hover:text-euricom-dark hover:bg-euricom-light/30"
                       >
@@ -217,6 +249,15 @@ const LunchLocations = () => {
                       >
                         Menu bekijken <ExternalLink className="ml-1 h-3 w-3" />
                       </a>
+                    )}
+                    
+                    {location.menuItems && location.menuItems.length > 0 && (
+                      <div className="mb-4">
+                        <p className="text-sm text-gray-600 flex items-center">
+                          <FileText className="h-4 w-4 mr-1 text-euricom" />
+                          {location.menuItems.length} menu items beschikbaar voor autocomplete
+                        </p>
+                      </div>
                     )}
                     
                     <div className="mt-6">
@@ -333,13 +374,60 @@ const LunchLocations = () => {
               <label htmlFor="order-text" className="text-sm font-medium">
                 Jouw bestelling
               </label>
-              <Textarea
-                id="order-text"
-                value={newOrder}
-                onChange={(e) => setNewOrder(e.target.value)}
-                placeholder="Beschrijf je bestelling gedetailleerd"
-              />
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <Search className="h-4 w-4 text-gray-400" />
+                </div>
+                <Input
+                  id="order-text"
+                  value={searchText}
+                  onChange={(e) => {
+                    setSearchText(e.target.value);
+                    if (!e.target.value) {
+                      setNewOrder('');
+                    } else if (e.target.value !== newOrder) {
+                      setNewOrder(e.target.value);
+                    }
+                  }}
+                  placeholder="Zoek of typ je bestelling"
+                  className="pl-10"
+                  autoComplete="off"
+                />
+                {showSuggestions && (
+                  <div className="absolute z-10 mt-1 w-full bg-white border border-gray-200 rounded-md shadow-lg max-h-60 overflow-auto">
+                    {suggestedItems.map((item) => (
+                      <div
+                        key={item.id}
+                        className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                        onClick={() => handleSuggestionClick(item)}
+                      >
+                        <div className="font-medium">{item.name}</div>
+                        {item.price && <div className="text-sm text-gray-500">€{item.price.toFixed(2)}</div>}
+                        {item.description && <div className="text-xs text-gray-400">{item.description}</div>}
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+              {selectedLocation?.menuItems && selectedLocation.menuItems.length > 0 && (
+                <p className="text-xs text-gray-500">
+                  Typ om te zoeken in {selectedLocation.menuItems.length} menu items of voer zelf iets in
+                </p>
+              )}
             </div>
+            
+            {newOrder && newOrder !== searchText && (
+              <div className="space-y-2">
+                <label className="text-sm font-medium">
+                  Details van je bestelling:
+                </label>
+                <Textarea
+                  value={newOrder}
+                  onChange={(e) => setNewOrder(e.target.value)}
+                  placeholder="Voeg hier eventuele details toe (bijv. 'zonder tomaat')"
+                />
+              </div>
+            )}
             
             {selectedLocation && getOrdersForLocation(selectedLocation.id).length > 0 && (
               <div className="space-y-2">

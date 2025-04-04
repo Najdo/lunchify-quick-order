@@ -57,6 +57,20 @@ export interface LunchLocation {
   createdBy: string;
   createdAt: Date;
   myOrder?: string;
+  menuItems?: MenuLocationItem[];
+  receipt?: {
+    imageUrl: string;
+    processed: boolean;
+    totalAmount: number;
+    uploadedAt: Date;
+  };
+}
+
+export interface MenuLocationItem {
+  id: string;
+  name: string;
+  price?: number;
+  description?: string;
 }
 
 export interface Order {
@@ -65,4 +79,7 @@ export interface Order {
   userName: string;
   orderText: string;
   createdAt: Date;
+  amount?: number;
+  isPaid?: boolean;
 }
+
