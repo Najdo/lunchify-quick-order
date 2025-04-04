@@ -1,8 +1,7 @@
-
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Plus, ExternalLink, Search, FileText } from 'lucide-react';
+import { Plus, ExternalLink, Search, FileText, ShoppingCart, Receipt } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
@@ -11,6 +10,8 @@ import { toast } from 'sonner';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import { LunchLocation, Order, MenuLocationItem } from '@/lib/types';
+import OrderSummary from '@/components/order/OrderSummary';
+import ReceiptUploader from '@/components/lunch/ReceiptUploader';
 
 // Mock data for demonstration purposes
 // In a real application, this would come from a database
@@ -143,6 +144,12 @@ const LunchLocations = () => {
   const getOrdersForLocation = (locationId: string) => {
     return mockOrders.filter(order => order.locationId === locationId);
   };
+
+  const handleReceiptProcessed = (updatedOrders: Order[]) => {
+    // Update the orders in the UI
+    toast.success('Kasticket verwerkt en betalingen bijgewerkt');
+    // In a real app, this would update the database
+  };
   
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -176,13 +183,22 @@ const LunchLocations = () => {
               <h1 className="text-3xl md:text-4xl font-bold">
                 Lunch Locaties voor Vandaag
               </h1>
-              <Button 
-                onClick={() => setIsAddDialogOpen(true)}
-                className="bg-euricom hover:bg-euricom-dark"
-              >
-                <Plus className="mr-2 h-4 w-4" />
-                Ik haal lunch op vandaag
-              </Button>
+              <div className="flex gap-3">
+                <Button 
+                  onClick={() => navigate('/menu')}
+                  className="bg-euricom hover:bg-euricom-dark"
+                >
+                  <ShoppingCart className="mr-2 h-4 w-4" />
+                  Lunch bestellen
+                </Button>
+                <Button 
+                  onClick={() => setIsAddDialogOpen(true)}
+                  className="bg-euricom hover:bg-euricom-dark"
+                >
+                  <Plus className="mr-2 h-4 w-4" />
+                  Ik haal lunch op vandaag
+                </Button>
+              </div>
             </div>
             
             <p className="text-gray-600 text-lg">
@@ -204,83 +220,116 @@ const LunchLocations = () => {
               </Button>
             </div>
           ) : (
-            <motion.div
-              variants={containerVariants}
-              initial="hidden"
-              animate="visible"
-              className="grid gap-8"
-            >
-              {todaysLocations.map((location) => (
-                <motion.div
-                  key={location.id}
-                  variants={itemVariants}
-                  className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden"
-                >
-                  <div className="p-6">
-                    <div className="flex justify-between items-start mb-4">
-                      <div>
-                        <h2 className="text-xl font-semibold mb-1">{location.name}</h2>
-                        <p className="text-sm text-gray-500">
-                          Toegevoegd door {location.createdBy}
-                        </p>
-                      </div>
-                      
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => {
-                          setSelectedLocation(location);
-                          setIsOrderDialogOpen(true);
-                          setSearchText('');
-                          setNewOrder('');
-                        }}
-                        className="text-euricom hover:text-euricom-dark hover:bg-euricom-light/30"
-                      >
-                        Bestelling doorgeven
-                      </Button>
-                    </div>
-                    
-                    {location.menuUrl && (
-                      <a 
-                        href={location.menuUrl} 
-                        target="_blank" 
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center text-euricom hover:text-euricom-dark mb-4 text-sm"
-                      >
-                        Menu bekijken <ExternalLink className="ml-1 h-3 w-3" />
-                      </a>
-                    )}
-                    
-                    {location.menuItems && location.menuItems.length > 0 && (
-                      <div className="mb-4">
-                        <p className="text-sm text-gray-600 flex items-center">
-                          <FileText className="h-4 w-4 mr-1 text-euricom" />
-                          {location.menuItems.length} menu items beschikbaar voor autocomplete
-                        </p>
-                      </div>
-                    )}
-                    
-                    <div className="mt-6">
-                      <h3 className="text-md font-medium mb-3">Bestellingen</h3>
-                      
-                      <div className="space-y-3 mb-4">
-                        <div className="bg-euricom-light/20 p-3 rounded-md">
-                          <p className="font-medium text-sm">{location.createdBy} (ophaler):</p>
-                          <p className="text-gray-700">{location.myOrder}</p>
+            <div className="grid md:grid-cols-3 gap-8">
+              <motion.div
+                variants={containerVariants}
+                initial="hidden"
+                animate="visible"
+                className="md:col-span-2 grid gap-8"
+              >
+                {todaysLocations.map((location) => (
+                  <motion.div
+                    key={location.id}
+                    variants={itemVariants}
+                    className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden"
+                  >
+                    <div className="p-6">
+                      <div className="flex justify-between items-start mb-4">
+                        <div>
+                          <h2 className="text-xl font-semibold mb-1">{location.name}</h2>
+                          <p className="text-sm text-gray-500">
+                            Toegevoegd door {location.createdBy}
+                          </p>
                         </div>
                         
-                        {getOrdersForLocation(location.id).map(order => (
-                          <div key={order.id} className="bg-gray-50 p-3 rounded-md">
-                            <p className="font-medium text-sm">{order.userName}:</p>
-                            <p className="text-gray-700">{order.orderText}</p>
+                        <div className="flex gap-2">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => {
+                              setSelectedLocation(location);
+                              setIsOrderDialogOpen(true);
+                              setSearchText('');
+                              setNewOrder('');
+                            }}
+                            className="text-euricom hover:text-euricom-dark hover:bg-euricom-light/30"
+                          >
+                            Bestelling doorgeven
+                          </Button>
+                          
+                          {location.createdBy === 'Huidige Gebruiker' && (
+                            <ReceiptUploader 
+                              location={location}
+                              orders={getOrdersForLocation(location.id)}
+                              onReceiptProcessed={handleReceiptProcessed}
+                            />
+                          )}
+                        </div>
+                      </div>
+                      
+                      {location.menuUrl && (
+                        <a 
+                          href={location.menuUrl} 
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center text-euricom hover:text-euricom-dark mb-4 text-sm"
+                        >
+                          Menu bekijken <ExternalLink className="ml-1 h-3 w-3" />
+                        </a>
+                      )}
+                      
+                      {location.menuItems && location.menuItems.length > 0 && (
+                        <div className="mb-4">
+                          <p className="text-sm text-gray-600 flex items-center">
+                            <FileText className="h-4 w-4 mr-1 text-euricom" />
+                            {location.menuItems.length} menu items beschikbaar voor autocomplete
+                          </p>
+                        </div>
+                      )}
+                      
+                      <div className="mt-6">
+                        <h3 className="text-md font-medium mb-3">Bestellingen</h3>
+                        
+                        <div className="space-y-3 mb-4">
+                          <div className="bg-euricom-light/20 p-3 rounded-md">
+                            <p className="font-medium text-sm">{location.createdBy} (ophaler):</p>
+                            <p className="text-gray-700">{location.myOrder}</p>
                           </div>
-                        ))}
+                          
+                          {getOrdersForLocation(location.id).map(order => (
+                            <div key={order.id} className="bg-gray-50 p-3 rounded-md">
+                              <p className="font-medium text-sm">{order.userName}:</p>
+                              <p className="text-gray-700">{order.orderText}</p>
+                            </div>
+                          ))}
+                        </div>
                       </div>
                     </div>
+                  </motion.div>
+                ))}
+              </motion.div>
+              
+              {/* Order Overview Section */}
+              <motion.div
+                variants={itemVariants}
+                className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden md:sticky md:top-24 h-fit"
+              >
+                <div className="p-6">
+                  <h2 className="text-xl font-semibold mb-6">Bestellingsoverzicht</h2>
+                  <OrderSummary showControls={false} />
+                  
+                  <div className="mt-6 flex justify-center">
+                    <Button 
+                      onClick={() => navigate('/menu')}
+                      className="bg-euricom hover:bg-euricom-dark w-full"
+                    >
+                      <ShoppingCart className="mr-2 h-4 w-4" />
+                      Naar lunch bestellen
+                    </Button>
                   </div>
-                </motion.div>
-              ))}
-            </motion.div>
+                </div>
+              </motion.div>
+            </div>
           )}
         </div>
       </main>
