@@ -279,7 +279,12 @@ const LunchLocations = () => {
                       )}
                       
                       {location.menuItems && location.menuItems.length > 0 && (
-
+                        <div className="mb-4">
+                          <p className="text-sm text-gray-600 flex items-center">
+                            <FileText className="h-4 w-4 mr-1 text-euricom" />
+                            {location.menuItems.length} menu items beschikbaar voor autocomplete
+                          </p>
+                        </div>
                       )}
                       
                       <div className="mt-6">
