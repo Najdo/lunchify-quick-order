@@ -60,12 +60,12 @@ const Index = () => {
                     <MapPin className="ml-2 h-5 w-5" />
                   </Link>
                 </Button>
-                <Button asChild size="lg" variant="outline">
-                  <Link to="/menu">
-                    Menu bekijken
-                    <ArrowRight className="ml-2 h-5 w-5" />
-                  </Link>
-                </Button>
+                <AddLunchLocationForm triggerButton={
+                  <Button size="lg" variant="outline">
+                    Ik haal lunch
+                    <Utensils className="ml-2 h-5 w-5" />
+                  </Button>
+                } />
               </motion.div>
             </div>
           </div>
@@ -170,12 +170,12 @@ const Index = () => {
                 <p className="text-gray-600 mb-4">
                   Geef aan dat je vandaag lunch haalt en waar je naartoe gaat.
                 </p>
-                <Button asChild className="w-full bg-euricom hover:bg-euricom-dark">
-                  <Link to="/locations">
+                <AddLunchLocationForm triggerButton={
+                  <Button className="w-full bg-euricom hover:bg-euricom-dark">
                     Lunch toevoegen
                     <ArrowRight className="ml-2 h-5 w-5" />
-                  </Link>
-                </Button>
+                  </Button>
+                } />
               </motion.div>
               
               <motion.div 

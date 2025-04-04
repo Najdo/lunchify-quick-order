@@ -5,7 +5,6 @@ import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Label } from "@/components/ui/label";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { toast } from "sonner";
@@ -26,7 +25,11 @@ const formSchema = z.object({
 
 type FormValues = z.infer<typeof formSchema>;
 
-const AddLunchLocationForm = () => {
+interface AddLunchLocationFormProps {
+  triggerButton?: React.ReactNode;
+}
+
+const AddLunchLocationForm = ({ triggerButton }: AddLunchLocationFormProps) => {
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -49,13 +52,17 @@ const AddLunchLocationForm = () => {
     form.reset();
   };
 
+  const defaultTrigger = (
+    <Button variant="outline" size="icon" className="rounded-full bg-white shadow-md hover:bg-gray-50">
+      <Plus className="h-5 w-5 text-euricom" />
+      <span className="sr-only">Voeg lunch locatie toe</span>
+    </Button>
+  );
+
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="outline" size="icon" className="rounded-full bg-white shadow-md hover:bg-gray-50">
-          <Plus className="h-5 w-5 text-euricom" />
-          <span className="sr-only">Voeg lunch locatie toe</span>
-        </Button>
+        {triggerButton || defaultTrigger}
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
