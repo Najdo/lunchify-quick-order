@@ -1,10 +1,9 @@
 
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { ShoppingCart, Menu, X } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
 import { cn } from '@/lib/utils';
-import { Button } from '@/components/ui/button';
 
 const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -25,10 +24,6 @@ const Header = () => {
     // Close mobile menu when route changes
     setMobileMenuOpen(false);
   }, [location.pathname]);
-  
-  const cartCount = getCartCount();
-  
-  // Removed the navLinks array since we're removing the Menu link
   
   return (
     <header
@@ -52,38 +47,14 @@ const Header = () => {
           </span>
         </Link>
         
-        {/* Desktop Navigation - Removed the Menu links */}
+        {/* Desktop Navigation - Empty since all navigation links were removed */}
         <nav className="hidden md:flex items-center">
-          <Link to="/cart">
-            <Button
-              variant="outline"
-              size="sm"
-              className="relative border-gray-200 hover:bg-gray-100 hover:text-euricom"
-            >
-              <ShoppingCart className="h-4 w-4 mr-2" />
-              <span>Bestelling</span>
-              {cartCount > 0 && (
-                <span className="absolute -top-2 -right-2 bg-euricom text-white text-xs w-5 h-5 rounded-full flex items-center justify-center">
-                  {cartCount}
-                </span>
-              )}
-            </Button>
-          </Link>
+          {/* Cart button removed */}
         </nav>
         
-        {/* Mobile Menu Button */}
+        {/* Mobile Menu Button - Only showing hamburger for mobile menu */}
         <div className="flex items-center md:hidden">
-          <Link 
-            to="/cart" 
-            className="relative mr-4 text-gray-600 hover:text-euricom transition-colors"
-          >
-            <ShoppingCart className="h-6 w-6" />
-            {cartCount > 0 && (
-              <span className="absolute -top-2 -right-2 bg-euricom text-white text-xs w-5 h-5 rounded-full flex items-center justify-center">
-                {cartCount}
-              </span>
-            )}
-          </Link>
+          {/* Cart link removed */}
           
           <button 
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -94,11 +65,11 @@ const Header = () => {
         </div>
       </div>
       
-      {/* Mobile Menu - Removed the menu links here as well */}
+      {/* Mobile Menu - Empty since all navigation links were removed */}
       {mobileMenuOpen && (
         <div className="md:hidden bg-white shadow-lg border-t animate-fade-in">
           <nav className="container-custom py-4 flex flex-col space-y-4">
-            {/* No navigation links as they've been removed */}
+            {/* No navigation links */}
           </nav>
         </div>
       )}
