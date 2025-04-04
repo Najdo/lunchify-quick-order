@@ -10,6 +10,8 @@ import Menu from "./pages/Menu";
 import Cart from "./pages/Cart";
 import Confirmation from "./pages/Confirmation";
 import NotFound from "./pages/NotFound";
+import LunchLocations from "./pages/LunchLocations";
+import OrderOverview from "./pages/OrderOverview";
 
 const queryClient = new QueryClient();
 
@@ -26,6 +28,8 @@ const App = () => (
             <Route path="/menu/:categoryId" element={<Menu />} />
             <Route path="/cart" element={<Cart />} />
             <Route path="/confirmation" element={<Confirmation />} />
+            <Route path="/locations" element={<LunchLocations />} />
+            <Route path="/orders" element={<OrderOverview />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>

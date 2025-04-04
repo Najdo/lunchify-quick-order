@@ -49,3 +49,20 @@ export interface Category {
   description?: string;
   image?: string;
 }
+
+export interface LunchLocation {
+  id: string;
+  name: string;
+  menuUrl?: string;
+  createdBy: string;
+  createdAt: Date;
+  myOrder?: string;
+}
+
+export interface Order {
+  id: string;
+  locationId: string;
+  userName: string;
+  orderText: string;
+  createdAt: Date;
+}

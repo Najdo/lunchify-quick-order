@@ -2,7 +2,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ArrowRight, Clock, Utensils, Award } from 'lucide-react';
+import { ArrowRight, Clock, Utensils, Award, MapPin, List } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { categories } from '@/lib/data';
 import Header from '@/components/layout/Header';
@@ -54,8 +54,14 @@ const Index = () => {
                 className="flex flex-col sm:flex-row gap-4 justify-center"
               >
                 <Button asChild size="lg" className="bg-euricom hover:bg-euricom-dark">
+                  <Link to="/locations">
+                    Lunch locaties vandaag
+                    <MapPin className="ml-2 h-5 w-5" />
+                  </Link>
+                </Button>
+                <Button asChild size="lg" variant="outline">
                   <Link to="/menu">
-                    Bekijk Menu
+                    Menu bekijken
                     <ArrowRight className="ml-2 h-5 w-5" />
                   </Link>
                 </Button>
@@ -120,8 +126,82 @@ const Index = () => {
           </div>
         </section>
         
-        {/* Menu Categories */}
+        {/* Quick Actions */}
         <section className="py-16 bg-gray-50">
+          <div className="container-custom">
+            <div className="text-center mb-16">
+              <h2 className="text-3xl md:text-4xl font-bold mb-4">Lunch vandaag</h2>
+              <p className="text-gray-600 max-w-xl mx-auto">
+                Bekijk de lunchlocaties voor vandaag, plaats een bestelling of voeg een nieuwe locatie toe
+              </p>
+            </div>
+            
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+              <motion.div 
+                className="bg-white p-6 rounded-xl shadow-sm border border-gray-100"
+                whileHover={{ y: -5 }}
+                transition={{ duration: 0.3 }}
+              >
+                <div className="w-12 h-12 bg-euricom-light rounded-full flex items-center justify-center mb-4">
+                  <MapPin className="h-6 w-6 text-euricom" />
+                </div>
+                <h3 className="text-xl font-semibold mb-3">Lunchlocaties bekijken</h3>
+                <p className="text-gray-600 mb-4">
+                  Bekijk waar je collega's vandaag lunch halen en bestel mee.
+                </p>
+                <Button asChild variant="outline" className="w-full">
+                  <Link to="/locations">
+                    Locaties bekijken
+                    <ArrowRight className="ml-2 h-5 w-5" />
+                  </Link>
+                </Button>
+              </motion.div>
+              
+              <motion.div 
+                className="bg-white p-6 rounded-xl shadow-sm border border-gray-100"
+                whileHover={{ y: -5 }}
+                transition={{ duration: 0.3 }}
+              >
+                <div className="w-12 h-12 bg-euricom-light rounded-full flex items-center justify-center mb-4">
+                  <Utensils className="h-6 w-6 text-euricom" />
+                </div>
+                <h3 className="text-xl font-semibold mb-3">Ik haal lunch</h3>
+                <p className="text-gray-600 mb-4">
+                  Geef aan dat je vandaag lunch haalt en waar je naartoe gaat.
+                </p>
+                <Button asChild className="w-full bg-euricom hover:bg-euricom-dark">
+                  <Link to="/locations">
+                    Lunch toevoegen
+                    <ArrowRight className="ml-2 h-5 w-5" />
+                  </Link>
+                </Button>
+              </motion.div>
+              
+              <motion.div 
+                className="bg-white p-6 rounded-xl shadow-sm border border-gray-100"
+                whileHover={{ y: -5 }}
+                transition={{ duration: 0.3 }}
+              >
+                <div className="w-12 h-12 bg-euricom-light rounded-full flex items-center justify-center mb-4">
+                  <List className="h-6 w-6 text-euricom" />
+                </div>
+                <h3 className="text-xl font-semibold mb-3">Bestellingsoverzicht</h3>
+                <p className="text-gray-600 mb-4">
+                  Bekijk alle bestellingen voor vandaag (voor ophalers).
+                </p>
+                <Button asChild variant="outline" className="w-full">
+                  <Link to="/orders">
+                    Overzicht bekijken
+                    <ArrowRight className="ml-2 h-5 w-5" />
+                  </Link>
+                </Button>
+              </motion.div>
+            </div>
+          </div>
+        </section>
+        
+        {/* Menu Categories */}
+        <section className="py-16 bg-white">
           <div className="container-custom">
             <div className="text-center mb-16">
               <h2 className="text-3xl md:text-4xl font-bold mb-4">Ontdek ons menu</h2>
@@ -157,9 +237,9 @@ const Index = () => {
               Bestel vóór 10:00 uur voor levering dezelfde dag op kantoor
             </p>
             <Button asChild size="lg" variant="secondary" className="bg-white text-euricom hover:bg-gray-100">
-              <Link to="/menu">
-                Plaats je bestelling
-                <ArrowRight className="ml-2 h-5 w-5" />
+              <Link to="/locations">
+                Bekijk lunchlocaties
+                <MapPin className="ml-2 h-5 w-5" />
               </Link>
             </Button>
           </div>
