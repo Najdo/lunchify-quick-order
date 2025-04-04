@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
@@ -10,7 +11,6 @@ import { toast } from 'sonner';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import { LunchLocation, Order, MenuLocationItem } from '@/lib/types';
-import OrderSummary from '@/components/order/OrderSummary';
 import ReceiptUploader from '@/components/lunch/ReceiptUploader';
 
 // Mock data for demonstration purposes
@@ -220,12 +220,12 @@ const LunchLocations = () => {
               </Button>
             </div>
           ) : (
-            <div className="grid md:grid-cols-3 gap-8">
+            <div className="grid gap-8">
               <motion.div
                 variants={containerVariants}
                 initial="hidden"
                 animate="visible"
-                className="md:col-span-2 grid gap-8"
+                className="grid gap-8"
               >
                 {todaysLocations.map((location) => (
                   <motion.div
@@ -307,27 +307,6 @@ const LunchLocations = () => {
                     </div>
                   </motion.div>
                 ))}
-              </motion.div>
-              
-              {/* Order Overview Section */}
-              <motion.div
-                variants={itemVariants}
-                className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden md:sticky md:top-24 h-fit"
-              >
-                <div className="p-6">
-                  <h2 className="text-xl font-semibold mb-6">Bestellingsoverzicht</h2>
-                  <OrderSummary showControls={false} />
-                  
-                  <div className="mt-6 flex justify-center">
-                    <Button 
-                      onClick={() => navigate('/menu')}
-                      className="bg-euricom hover:bg-euricom-dark w-full"
-                    >
-                      <ShoppingCart className="mr-2 h-4 w-4" />
-                      Naar lunch bestellen
-                    </Button>
-                  </div>
-                </div>
               </motion.div>
             </div>
           )}
