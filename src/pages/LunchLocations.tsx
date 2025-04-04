@@ -196,7 +196,7 @@ const LunchLocations = () => {
                   className="bg-euricom hover:bg-euricom-dark"
                 >
                   <Plus className="mr-2 h-4 w-4" />
-                  Ik haal lunch op vandaag
+                  Ik haal ergens anders lunch op
                 </Button>
               </div>
             </div>
@@ -216,7 +216,7 @@ const LunchLocations = () => {
                 className="bg-euricom hover:bg-euricom-dark"
               >
                 <Plus className="mr-2 h-4 w-4" />
-                Ik haal lunch op vandaag
+                Ik haal ergens anders lunch op
               </Button>
             </div>
           ) : (
@@ -317,7 +317,7 @@ const LunchLocations = () => {
       <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle>Ik haal lunch op vandaag</DialogTitle>
+            <DialogTitle>Ik haal ergens anders lunch op</DialogTitle>
           </DialogHeader>
           
           <div className="space-y-4 py-4">
