@@ -196,7 +196,7 @@ const LunchLocations = () => {
                   className="bg-euricom hover:bg-euricom-dark"
                 >
                   <Plus className="mr-2 h-4 w-4" />
-                  Ik haal ergens anders lunch op
+                  Ik haal lunch op vandaag
                 </Button>
               </div>
             </div>
@@ -216,7 +216,7 @@ const LunchLocations = () => {
                 className="bg-euricom hover:bg-euricom-dark"
               >
                 <Plus className="mr-2 h-4 w-4" />
-                Ik haal ergens anders lunch op
+                Ik haal lunch op vandaag
               </Button>
             </div>
           ) : (
@@ -279,12 +279,7 @@ const LunchLocations = () => {
                       )}
                       
                       {location.menuItems && location.menuItems.length > 0 && (
-                        <div className="mb-4">
-                          <p className="text-sm text-gray-600 flex items-center">
-                            <FileText className="h-4 w-4 mr-1 text-euricom" />
-                            {location.menuItems.length} menu items beschikbaar voor autocomplete
-                          </p>
-                        </div>
+
                       )}
                       
                       <div className="mt-6">
@@ -317,7 +312,7 @@ const LunchLocations = () => {
       <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle>Ik haal ergens anders lunch op</DialogTitle>
+            <DialogTitle>Ik haal lunch op vandaag</DialogTitle>
           </DialogHeader>
           
           <div className="space-y-4 py-4">
