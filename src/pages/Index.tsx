@@ -8,6 +8,7 @@ import { categories } from '@/lib/data';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import MenuCategory from '@/components/menu/MenuCategory';
+import AddLunchLocationForm from '@/components/lunch/AddLunchLocationForm';
 
 const Index = () => {
   return (
@@ -247,6 +248,11 @@ const Index = () => {
       </main>
       
       <Footer />
+      
+      {/* Floating Add Button */}
+      <div className="fixed bottom-8 right-8 z-40">
+        <AddLunchLocationForm />
+      </div>
     </div>
   );
 };
