@@ -28,10 +28,7 @@ const Header = () => {
   
   const cartCount = getCartCount();
   
-  const navLinks = [
-    { name: 'Home', path: '/' },
-    { name: 'Menu', path: '/menu' },
-  ];
+  // Removed the navLinks array since we're removing the Menu link
   
   return (
     <header
@@ -55,21 +52,8 @@ const Header = () => {
           </span>
         </Link>
         
-        {/* Desktop Navigation */}
-        <nav className="hidden md:flex space-x-8 items-center">
-          {navLinks.map((link) => (
-            <Link
-              key={link.path}
-              to={link.path}
-              className={cn(
-                "text-sm font-medium transition-colors hover:text-euricom",
-                location.pathname === link.path ? "text-euricom" : "text-gray-600"
-              )}
-            >
-              {link.name}
-            </Link>
-          ))}
-          
+        {/* Desktop Navigation - Removed the Menu links */}
+        <nav className="hidden md:flex items-center">
           <Link to="/cart">
             <Button
               variant="outline"
@@ -110,24 +94,11 @@ const Header = () => {
         </div>
       </div>
       
-      {/* Mobile Menu */}
+      {/* Mobile Menu - Removed the menu links here as well */}
       {mobileMenuOpen && (
         <div className="md:hidden bg-white shadow-lg border-t animate-fade-in">
           <nav className="container-custom py-4 flex flex-col space-y-4">
-            {navLinks.map((link) => (
-              <Link
-                key={link.path}
-                to={link.path}
-                className={cn(
-                  "text-sm font-medium p-2 transition-colors hover:text-euricom",
-                  location.pathname === link.path 
-                    ? "text-euricom bg-gray-50 rounded" 
-                    : "text-gray-600"
-                )}
-              >
-                {link.name}
-              </Link>
-            ))}
+            {/* No navigation links as they've been removed */}
           </nav>
         </div>
       )}
